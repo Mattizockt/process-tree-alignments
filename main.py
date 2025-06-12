@@ -47,27 +47,29 @@ if __name__ == "__main__":
             print(f" -> {ptml_file.stem}")
             evaluate_event_logs.append({'event_log': event_log,
                                         'process_tree': process_tree,
-                                        'repeat': 5,
+                                        'repeat': 1,
                                         'result_path': cur_path,
                                         'file_tag': ""})
         else:
-            for max_distinction, noise_threshold, file_tag in [(5, 0.0, "_hard5_pt00"),
-                                                               (5, 0.1, "_hard5_pt10"),
-                                                               (5, 0.25, "_hard5_pt25"),
-                                                               (5, 0.5, "_hard5_pt50")]:
-                if (ptml_file := data_path / f"{xes_file.stem}{file_tag}.ptml").is_file():
-                    process_tree = pm4py.read_ptml(str(ptml_file))
-                else:
-                    process_tree = discover_process_tree_with_naive_label_splitting(
-                        event_log, max_distinction=max_distinction, noise_threshold=noise_threshold)
-                    pm4py.write_ptml(process_tree, str(data_path / f"{xes_file.stem}{file_tag}.ptml"))
-                print(f" -> {ptml_file.stem}")
-                evaluate_event_logs.append({'event_log': event_log,
-                                            'process_tree': process_tree,
-                                            'repeat': 5,
-                                            'result_path': cur_path,
-                                            'file_tag': file_tag})
+            # for max_distinction, noise_threshold, file_tag in [
+            # # for max_distinction, noise_threshold, file_tag in [(5, 0.0, "_hard5_pt00"),
+            #                                                    (5, 0.1, "_hard5_pt10")]:
+            #                                                 #    (5, 0.25, "_hard5_pt25"),
+            #                                                 #    (5, 0.5, "_hard5_pt50")]:
+            #     if (ptml_file := data_path / f"{xes_file.stem}{file_tag}.ptml").is_file():
+            #         process_tree = pm4py.read_ptml(str(ptml_file))
+            #     else:
+            #         process_tree = discover_process_tree_with_naive_label_splitting(
+            #             event_log, max_distinction=max_distinction, noise_threshold=noise_threshold)
+            #         pm4py.write_ptml(process_tree, str(data_path / f"{xes_file.stem}{file_tag}.ptml"))
+            #     print(f" -> {ptml_file.stem}")
+            #     evaluate_event_logs.append({'event_log': event_log,
+            #                                 'process_tree': process_tree,
+            #                                 'repeat': 5,
+            #                                 'result_path': cur_path,
+                                            # 'file_tag': file_tag})
 
+            # for noise_threshold, file_tag in [(0.1, "_pt10")]:
             for noise_threshold, file_tag in [(0.0, "_pt00"), (0.1, "_pt10"), (0.25, "_pt25"), (0.5, "_pt50")]:
                 if (ptml_file := data_path / f"{xes_file.stem}{file_tag}.ptml").is_file():
                     process_tree = pm4py.read_ptml(str(ptml_file))
@@ -77,7 +79,7 @@ if __name__ == "__main__":
                 print(f" -> {ptml_file.stem}")
                 evaluate_event_logs.append({'event_log': event_log,
                                             'process_tree': process_tree,
-                                            'repeat': 5,
+                                            'repeat': 1,
                                             'result_path': cur_path,
                                             'file_tag': file_tag})
 

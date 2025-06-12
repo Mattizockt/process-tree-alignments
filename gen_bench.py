@@ -8,7 +8,7 @@ from pathlib import Path
 import numpy as np
 import pm4py
 
-random.seed(42)
+random.seed(123)
 
 def boring_palindrom(m,n, number_of_traces=5):
     assert m > 1

@@ -20,12 +20,10 @@ from process_tree_alignment import align
 from process_tree_graph import ProcessTreeGraph
 
 
-# Set seed for reproducibility
-random.seed(42)
-# Number of CPUs to use
+# Set seed for reproducibility# Number of CPUs to use
 N_CPUS = cpu_count()
 N_WORKERS = N_CPUS // 2 - 2 if N_CPUS < 32 else N_CPUS - 16
-TIMEOUT = 65
+TIMEOUT = 120
 MAX_TRACE_VARIANTS = 1000
 OFFSET = 0
 
@@ -83,19 +81,19 @@ def evaluate_trace(trace: Trace,
         times2 = Timer(alignments_with_timeout).repeat(repeat=repeat, number=1)
     except TimeoutError:
         times2 = [TIMEOUT] * repeat
-    try:
-        times3 = Timer(alignments_petri_net_with_timeout).repeat(repeat=repeat, number=1)
-    except TimeoutError:
-        times3 = [TIMEOUT] * repeat
+    # try:
+    #     times3 = Timer(alignments_petri_net_with_timeout).repeat(repeat=repeat, number=1)
+    # except TimeoutError:
+    #     times3 = [TIMEOUT] * repeat
 
     if min(times1) >= TIMEOUT:
         cost1.value = -1.0
     if min(times2) >= TIMEOUT:
         cost2.value = -1.0
-    if min(times3) >= TIMEOUT:
-        cost3.value = -1.0
+    # if min(times3) >= TIMEOUT:
+    #     cost3.value = -1.0
 
-    return (times1, times2, times3), (cost1.value, cost2.value, cost3.value)
+    return (times1, times2, times2), (cost1.value, cost2.value, cost2.value)
 
 
 # Define a process which will be in charge of storing the results of the benchmark
@@ -166,10 +164,11 @@ def evaluate_event_log(event_log: EventLog | pd.DataFrame,
 
     # Get trace variant results and shuffle them
     trace_variants = list(zip(*get_variants(event_log, None)))
-    random.shuffle(trace_variants)
+    # random.shuffle(trace_variants)
     # Check if number of trace_variants is below max_trace_variants
+    random.seed(123)
     if len(trace_variants) > max_trace_variants:
-        trace_variants = trace_variants[OFFSET:(max_trace_variants+OFFSET)]
+        trace_variants = random.sample(trace_variants, MAX_TRACE_VARIANTS)
 
     # Collect the work to do:
     trace_variants = list(trace_variants)
